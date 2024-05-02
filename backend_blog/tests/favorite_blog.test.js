@@ -1,7 +1,7 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 
-const totalLikes = require('../utils/list_helper').totalLikes
+const favoriteBlog = require('../utils/list_helper').favoriteBlog
 
 const listWithOneBlog = [
     {
@@ -67,20 +67,41 @@ const listWithManyBlogs = [
 
 const listWithoutBlogs = []
 
-describe('total likes', () => {
+describe('favorite blog', () => {
 
-    test('when list has only one blog, equals the likes of that', () => {
-        const result = totalLikes(listWithOneBlog)
-        assert.strictEqual(result, 5)
+    test('when list has only one blog, returns this blog', () => {
+        const result = favoriteBlog(listWithOneBlog)
+        const mustReturn = {
+            _id: '5a422aa71b54a676234d17f8',
+            title: 'Go To Statement Considered Harmful',
+            author: 'Edsger W. Dijkstra',
+            url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+            likes: 5,
+            __v: 0
+        }
+
+        assert.deepEqual(result, mustReturn)
     })
 
-    test('when list has many blogs, equals the sum of them', () => {
-        const result = totalLikes(listWithManyBlogs)
-        assert.strictEqual(result, 36)
+    test('when list has many blogs, returns the blog with most likes', () => {
+        const result = favoriteBlog(listWithManyBlogs)
+        const mustReturn = {
+            _id: "5a422b3a1b54a676234d17f9",
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+            likes: 12,
+            __v: 0
+        }
+
+        assert.deepEqual(result, mustReturn)
     })
 
-    test('when list has not any blogs, returns 0', () => {
-        const result = totalLikes(listWithoutBlogs)
-        assert.strictEqual(result, 0)
+    test('when list has not blogs, returns a empty object', () => {
+        const result = favoriteBlog(listWithoutBlogs)
+        const mustReturn = {}
+
+        assert.deepEqual(result, mustReturn)
     })
+
 })
