@@ -23,6 +23,32 @@ describe('blog api tests', () => {
 
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
   })
+
+  test('unique identification is called id', async () => {
+    const response = await api.get('/api/blogs')
+
+    assert.ok(response.body[0].id)
+  })
+
+  test('a new blog can be added', async () => {
+    const newBlog = {
+      title: 'New Title',
+      author: 'Anonymous',
+      url: 'New URL',
+      likes: 8
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+    const contents = blogsAtEnd.map(n => n.title)
+    assert(contents.includes('New Title'))
+  })
 })
 
 after(async () => {
