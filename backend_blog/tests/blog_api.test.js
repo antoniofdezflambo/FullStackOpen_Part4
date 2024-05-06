@@ -17,7 +17,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-describe('blog api tests', () => {
+describe('blog api tests ', () => {
   test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
 
@@ -30,65 +30,85 @@ describe('blog api tests', () => {
     assert.ok(response.body[0].id)
   })
 
-  test('a new blog can be added', async () => {
-    const newBlog = {
-      title: 'New Title',
-      author: 'Anonymous',
-      url: 'New URL',
-      likes: 8
-    }
+  describe('adding new blogs', () => {
+    test('a new blog can be added', async () => {
+      const newBlog = {
+        title: 'New Title',
+        author: 'Anonymous',
+        url: 'New URL',
+        likes: 8
+      }
+  
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+  
+      const blogsAtEnd = await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  
+      const titles = blogsAtEnd.map(n => n.title)
+      assert(titles.includes('New Title'))
+    })
 
-    await api.post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
-
-    const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
-
-    const titles = blogsAtEnd.map(n => n.title)
-    assert(titles.includes('New Title'))
+    test('if likes are not specified, they must be 0', async () => {
+      const newBlog = {
+        title: 'New Title',
+        author: 'Anonymous',
+        url: 'New URL'
+      }
+  
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+  
+      const blogsAtEnd = await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  
+      const likes = blogsAtEnd.map(n => n.likes)
+      assert.strictEqual(likes[likes.length - 1], 0)
+    })
+  
+    test('if title or url are not specified, bad request', async () => {
+      const newBlogWithoutTitle = {
+        author: 'Anonymous',
+        url: 'New URL',
+        likes: 8
+      }
+  
+      await api.post('/api/blogs')
+        .send(newBlogWithoutTitle)
+        .expect(400)
+  
+      const newBlogWithoutURL ={
+        title: 'New Title',
+        author: 'Anonymous',
+        likes: 8
+      }
+  
+      await api.post('/api/blogs')
+        .send(newBlogWithoutURL)
+        .expect(400)
+    })
   })
 
-  test('if likes are not specified, they must be 0', async () => {
-    const newBlog = {
-      title: 'New Title',
-      author: 'Anonymous',
-      url: 'New URL'
-    }
+  describe('deleting a blog', () => {
+    test('blog can be deleted', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToDelete = blogsAtStart[0]
 
-    await api.post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
+      await api.delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
 
-    const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+      const blogsAtEnd = await helper.blogsInDb()
 
-    const likes = blogsAtEnd.map(n => n.likes)
-    assert.strictEqual(likes[likes.length - 1], 0)
-  })
+      const titles = blogsAtEnd.map(n => n.title)
+      assert(!titles.includes(blogToDelete.title))
 
-  test('if title or url are not specified, bad request', async () => {
-    const newBlogWithoutTitle = {
-      author: 'Anonymous',
-      url: 'New URL',
-      likes: 8
-    }
+      assert.strictEqual(blogsAtStart.length - 1, blogsAtEnd.length)
 
-    await api.post('/api/blogs')
-      .send(newBlogWithoutTitle)
-      .expect(400)
-
-    const newBlogWithoutURL ={
-      title: 'New Title',
-      author: 'Anonymous',
-      likes: 8
-    }
-
-    await api.post('/api/blogs')
-      .send(newBlogWithoutURL)
-      .expect(400)
+    })
   })
 })
 
