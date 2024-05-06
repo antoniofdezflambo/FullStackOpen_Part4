@@ -68,6 +68,28 @@ describe('blog api tests', () => {
     const likes = blogsAtEnd.map(n => n.likes)
     assert.strictEqual(likes[likes.length - 1], 0)
   })
+
+  test('if title or url are not specified, bad request', async () => {
+    const newBlogWithoutTitle = {
+      author: 'Anonymous',
+      url: 'New URL',
+      likes: 8
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlogWithoutTitle)
+      .expect(400)
+
+    const newBlogWithoutURL ={
+      title: 'New Title',
+      author: 'Anonymous',
+      likes: 8
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlogWithoutURL)
+      .expect(400)
+  })
 })
 
 after(async () => {

@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+require('express-async-errors')
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({})
@@ -8,6 +9,8 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
+
+    if(!body.title || !body.url) response.status(400).end()
 
     const blog = new Blog({
         title: body.title,
