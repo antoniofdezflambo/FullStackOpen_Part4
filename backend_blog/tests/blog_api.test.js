@@ -46,8 +46,27 @@ describe('blog api tests', () => {
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-    const contents = blogsAtEnd.map(n => n.title)
-    assert(contents.includes('New Title'))
+    const titles = blogsAtEnd.map(n => n.title)
+    assert(titles.includes('New Title'))
+  })
+
+  test.only('if likes are not specified, they must be 0', async () => {
+    const newBlog = {
+      title: 'New Title',
+      author: 'Anonymous',
+      url: 'New URL'
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+    const likes = blogsAtEnd.map(n => n.likes)
+    assert.strictEqual(likes[likes.length - 1], 0)
   })
 })
 
