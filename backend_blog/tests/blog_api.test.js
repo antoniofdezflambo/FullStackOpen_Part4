@@ -110,6 +110,27 @@ describe('blog api tests ', () => {
 
     })
   })
+
+  describe('updating a blog', () => {
+    test('updating a blog with valid data', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+
+      const likes = {
+        likes: 13
+      }
+
+      await api.put(`/api/blogs/${blogToUpdate.id}`)
+        .send(likes)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      const updatedBlog = blogsAtEnd[0]
+      assert.notStrictEqual(blogToUpdate.likes, updatedBlog.likes)
+      assert.strictEqual(updatedBlog.likes, 13)
+    })
+  })
 })
 
 after(async () => {
