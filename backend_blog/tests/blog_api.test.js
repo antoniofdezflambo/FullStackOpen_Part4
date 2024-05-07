@@ -98,6 +98,7 @@ describe('blog api tests ', () => {
       const blogsAtStart = await helper.blogsInDb()
       const blogToDelete = blogsAtStart[0]
 
+<<<<<<< HEAD
       await api.delete(`/api/blogs/${blogToDelete.id}`)
         .expect(204)
 
@@ -130,6 +131,29 @@ describe('blog api tests ', () => {
       assert.notStrictEqual(blogToUpdate.likes, updatedBlog.likes)
       assert.strictEqual(updatedBlog.likes, 13)
     })
+=======
+    const titles = blogsAtEnd.map(n => n.title)
+    assert(titles.includes('New Title'))
+  })
+
+  test.only('if likes are not specified, they must be 0', async () => {
+    const newBlog = {
+      title: 'New Title',
+      author: 'Anonymous',
+      url: 'New URL'
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+    const likes = blogsAtEnd.map(n => n.likes)
+    assert.strictEqual(likes[likes.length - 1], 0)
+>>>>>>> 7e54715e1fa9297a5b2916659d3ddf0c37cfc6c8
   })
 })
 
