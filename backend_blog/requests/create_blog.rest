@@ -1,6 +1,6 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzdWFyaW8iLCJpZCI6IjY2M2U1NGJhYTI1ZDI3MGI5NWU4M2E4MyIsImlhdCI6MTcxNTM2MDk5MX0.dHhXmX9vP6hdTVNo9ySOyPfjfuZ1R0g-v7KaapCbFTw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzdWFyaW8iLCJpZCI6IjY2M2U3MzQyOWZkZTViZDkxMWY0NDRhNSIsImlhdCI6MTcxNTM2ODc4MSwiZXhwIjoxNzE1MzcyMzgxfQ.dLQ8t98TWhtLDgMeLhO17oDz_lxBrfXc-j7FKEvtZiI
 
 {
   "title": "Titulo de prueba con TOKEN",
@@ -12,7 +12,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzd
 ###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzdWFyaW8gMiIsImlkIjoiNjYzZTU0YzVhMjVkMjcwYjk1ZTgzYTg1IiwiaWF0IjoxNzE1MzYxNTUxfQ.zorlLKnb940rjJupVPR7g6RczNeA5YFKu33t8ADB-HM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVzdWFyaW8gMiIsImlkIjoiNjYzZTczYzA5ZmRlNWJkOTExZjQ0NGMyIiwiaWF0IjoxNzE1MzY5MzAyLCJleHAiOjE3MTUzNzI5MDJ9.tpkeNRKcsicn6mIlQzbDAr4GHOMSKF0CuTYabx6avJI
 
 {
   "title": "Titulo de prueba 2 con TOKEN",
