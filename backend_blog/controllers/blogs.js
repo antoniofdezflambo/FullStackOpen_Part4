@@ -5,15 +5,6 @@ const logger = require('../utils/logger')
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
-const getTokenFrom = request => {
-    const authorization = request.get('authorization')
-
-    if(authorization && authorization.startsWith('Bearer '))
-        return authorization.replace('Bearer ', '')
-
-    return null
-}
-
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1 })
     response.json(blogs)
@@ -22,8 +13,11 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
 
-    // if(!body.title || !body.url) response.status(400).end()
-    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+    if(!body.title || !body.url) return response.status(400).json({
+        error: 'a blog must contains title and url'
+    })
+
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
     if(!decodedToken.id)
         return response.status(401).json({
