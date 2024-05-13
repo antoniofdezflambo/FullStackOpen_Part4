@@ -14,7 +14,7 @@ blogsRouter.post('/', async (request, response) => {
     const user = request.user
     const body = request.body
 
-    if(!user) return response.status(400).json({
+    if(!user) return response.status(401).json({
         error: 'token does not correspond to any user'
     })
 
@@ -39,7 +39,7 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
     const user = request.user
-    if(!user) return response.status(400).json({
+    if(!user) return response.status(401).json({
         error: 'token does not correspond to any user'
     })
     
